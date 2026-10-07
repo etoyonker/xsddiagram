@@ -35,7 +35,7 @@ namespace XSDDiagram
 		//static extern bool AllocConsole();
 
 		static string usage = @"XSD Diagram, version {0}
-Usage: {1} [-o output.svg] [-os EXTENSION] [-r RootElement[@namespace]]* [-e N] [-d] [-z N] [-f PATH,NAME,TYPE,NAMESPACE,COMMENT,SEQ,LASTCHILD,XSDTYPE] [-a] [-y] [-u USERNAME] [-p PASSWORD] [file.xsd or URL]
+Usage: {1} [-o output.svg] [-os EXTENSION] [-r RootElement[@namespace]]* [-e N] [-d] [-z N] [-f PATH,NAME,TYPE,NAMESPACE,COMMENT,SEQ,MINOCCURS,MAXOCCURS,ISARRAY,LASTCHILD,XSDTYPE] [-a] [-y] [-u USERNAME] [-p PASSWORD] [file.xsd or URL]
 
 -o FILE
 	specifies the output image. '.png','.jpg', '.svg', '.txt', '.csv' ('.emf' on Windows) are allowed.
@@ -56,7 +56,7 @@ Usage: {1} [-o output.svg] [-os EXTENSION] [-r RootElement[@namespace]]* [-e N] 
 -z N
 	specifies the zoom percentage from 10% to 1000% (only for .png image).
 	Work only with the '-o', '-os png' or '-os jpg' option.
--f PATH,NAME,TYPE,NAMESPACE,COMMENT,SEQ,LASTCHILD,XSDTYPE
+-f PATH,NAME,TYPE,NAMESPACE,COMMENT,SEQ,MINOCCURS,MAXOCCURS,ISARRAY,LASTCHILD,XSDTYPE
 	specifies the fields you want to output when rendering to a txt or csv file.
 -a
 	outputs the attributes in text mode only (.txt and .csv).

@@ -30,7 +30,7 @@ namespace XSDDiagram.Rendering
         private Schema _schema;
 
         private static List<string> fields = new List<string>() {
-            "PATH", "NAME", "TYPE", "NAMESPACE", "COMMENT", "SEQ", "LASTCHILD", "XSDTYPE"
+            "PATH", "NAME", "TYPE", "NAMESPACE", "COMMENT", "SEQ", "MINOCCURS", "MAXOCCURS", "ISARRAY", "LASTCHILD", "XSDTYPE"
         };
 
         #endregion
@@ -264,6 +264,9 @@ namespace XSDDiagram.Rendering
                         case "NAMESPACE": _writer.Write(drawingItem.NameSpace); break;
                         case "COMMENT": _writer.Write(comment); break;
                         case "SEQ": _writer.Write(occurences); break;
+                        case "MINOCCURS": _writer.Write(drawingItem.MinOccurrence); break;
+                        case "MAXOCCURS": _writer.Write(drawingItem.MaxOccurrence == -1 ? "unbounded" : drawingItem.MaxOccurrence.ToString()); break;
+                        case "ISARRAY": _writer.Write(IsArray(drawingItem) ? "1" : "0"); break;
                         case "LASTCHILD": _writer.Write(this.iteratingLastChild ? "1" : "0"); break;
                         case "XSDTYPE": _writer.Write(t); break;
                     }
@@ -373,6 +376,22 @@ namespace XSDDiagram.Rendering
         #endregion
 
         #region Private Methods
+
+        private static bool IsArray(DiagramItem drawingItem)
+        {
+            if (drawingItem.MaxOccurrence == -1 || drawingItem.MaxOccurrence > 1)
+                return true;
+
+            DiagramItem parent = drawingItem.Parent;
+            while (parent != null && parent.ItemType == DiagramItemType.group)
+            {
+                if (parent.MaxOccurrence == -1 || parent.MaxOccurrence > 1)
+                    return true;
+                parent = parent.Parent;
+            }
+
+            return false;
+        }
 
         #endregion
 
