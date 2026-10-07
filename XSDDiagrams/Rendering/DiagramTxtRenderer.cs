@@ -258,17 +258,17 @@ namespace XSDDiagram.Rendering
                     string field = _finalTextOutputFields[i];
                     switch (field)
                     {
-                        case "PATH": _writer.Write(path); break;
-                        case "NAME": _writer.Write(drawingItem.Name); break;
-                        case "TYPE": _writer.Write(type); break;
-                        case "NAMESPACE": _writer.Write(drawingItem.NameSpace); break;
-                        case "COMMENT": _writer.Write(comment); break;
-                        case "SEQ": _writer.Write(occurences); break;
-                        case "MINOCCURS": _writer.Write(drawingItem.MinOccurrence); break;
-                        case "MAXOCCURS": _writer.Write(drawingItem.MaxOccurrence == -1 ? "unbounded" : drawingItem.MaxOccurrence.ToString()); break;
-                        case "ISARRAY": _writer.Write(IsArray(drawingItem) ? "1" : "0"); break;
-                        case "LASTCHILD": _writer.Write(this.iteratingLastChild ? "1" : "0"); break;
-                        case "XSDTYPE": _writer.Write(t); break;
+                        case "PATH": WriteValue(path); break;
+                        case "NAME": WriteValue(drawingItem.Name); break;
+                        case "TYPE": WriteValue(type); break;
+                        case "NAMESPACE": WriteValue(drawingItem.NameSpace); break;
+                        case "COMMENT": WriteValue(comment); break;
+                        case "SEQ": WriteValue(occurences); break;
+                        case "MINOCCURS": WriteValue(drawingItem.MinOccurrence.ToString()); break;
+                        case "MAXOCCURS": WriteValue(drawingItem.MaxOccurrence == -1 ? "unbounded" : drawingItem.MaxOccurrence.ToString()); break;
+                        case "ISARRAY": WriteValue(IsArray(drawingItem) ? "1" : "0"); break;
+                        case "LASTCHILD": WriteValue(this.iteratingLastChild ? "1" : "0"); break;
+                        case "XSDTYPE": WriteValue(t); break;
                     }
                 }
                 _writer.WriteLine();
@@ -300,11 +300,11 @@ namespace XSDDiagram.Rendering
                                     string field = _finalTextOutputFields[i];
                                     switch (field)
                                     {
-                                        case "PATH": _writer.Write(path + "@" + xsdAttribute.Name); break;
-                                        case "NAME": _writer.Write(drawingItem.Name + "@" + xsdAttribute.Name); break;
-                                        case "TYPE": _writer.Write(xsdAttribute.Type); break;
-                                        case "NAMESPACE": _writer.Write(xsdAttribute.NameSpace); break;
-                                        case "COMMENT": _writer.Write(commentAttribute); break;
+                                        case "PATH": WriteValue(path + "@" + xsdAttribute.Name); break;
+                                        case "NAME": WriteValue(drawingItem.Name + "@" + xsdAttribute.Name); break;
+                                        case "TYPE": WriteValue(xsdAttribute.Type); break;
+                                        case "NAMESPACE": WriteValue(xsdAttribute.NameSpace); break;
+                                        case "COMMENT": WriteValue(commentAttribute); break;
                                     }
                                 }
                                 _writer.WriteLine();
@@ -376,6 +376,19 @@ namespace XSDDiagram.Rendering
         #endregion
 
         #region Private Methods
+
+        private void WriteValue(string value)
+        {
+            if (!_isCSV || value.IndexOfAny(new char[] { ',', '"', '\r', '\n' }) == -1)
+            {
+                _writer.Write(value);
+                return;
+            }
+
+            _writer.Write('"');
+            _writer.Write(value.Replace("\"", "\"\""));
+            _writer.Write('"');
+        }
 
         private static bool IsArray(DiagramItem drawingItem)
         {
